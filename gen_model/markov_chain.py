@@ -7,12 +7,13 @@ class MarkovCain:
         self.trigrams = {}
 
     def get_synthetic_data(self):
+        # self.create_bigram_trigram()
         sentences = self.generate_synthetic_data()
         blob = self.parse_sentences(sentences)
         f = open("./synth_data.txt", "w")
         f.write(blob)
         f.close()
-
+        
     def parse_sentences(self, sentences):
         new_sentences = ""
         for sentence in sentences:
@@ -25,6 +26,7 @@ class MarkovCain:
     def generate_synthetic_data(self):
         ### https://yurichev.com/blog/markov/
         text = random.choice([["this", "is"], ["it", "is"], ["you", "are"], ["that", "is"]])
+        text = ["it", "is"]
         tlen = len(text)
         sentences = []
         for j in range(100000):
@@ -33,14 +35,18 @@ class MarkovCain:
             if temp in self.trigrams:
                 new_word = self.__generate_random_trigram(temp)
                 text.append(new_word)
-            elif temp in self.bigrams:
+            elif text[l_ind - 1] in self.bigrams:
                 new_word = self.__generate_random_bigram(text[l_ind - 1])
                 text.append(new_word)
+                if(j%10 == 0):
+                    sentences.append(text)
+                    text = random.choice([["this", "is"], ["it", "is"], ["you", "are"], ["that", "is"]])
+                    tlen = len(text) 
             else:
-                # print("coming hehre")
                 sentences.append(text)
-                text = random.choice([["this", "is"], ["it", "is"], ["you", "are"],["that", "is"]])
+                text = random.choice([["this", "is"], ["it", "is"], ["you", "are"], ["that", "is"]])
                 tlen = len(text) 
+
         return sentences
     
 
@@ -52,7 +58,7 @@ class MarkovCain:
                 if idx >= 1:
                     self.__update_ngram(1, words[idx - 1], word)
                 if idx >= 2:
-                    self.__update_ngram(2, words[idx - 1] + " " + words[idx - 2], word)
+                    self.__update_ngram(2, words[idx - 2] + " " + words[idx - 1], word)
         # print(self.bigrams)
 
 
@@ -69,7 +75,7 @@ class MarkovCain:
             self.trigrams[sequence][word] = self.trigrams[sequence][word] + 1
 
     def __generate_random_bigram(self, token):
-        return random.choices(list(self.bigrams[token].keys()), weights=list(self.bigrams[token].values()))[0]
+        return random.choices(list(self.bigrams[token].keys()), weights = list(self.bigrams[token].values()))[0]
 
 
     def __generate_random_trigram(self, token):
