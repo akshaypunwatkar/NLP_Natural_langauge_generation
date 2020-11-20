@@ -1,5 +1,6 @@
 import numpy as np
 import nltk
+from markov_chain import MarkovCain
 
 class FileParser:
     def __init__(self, **kwargs):
@@ -24,7 +25,7 @@ class FileParser:
             self.__parse_file()
         self.__sanitize_data()
         self.__create_sentences()
-        print(self.clean_sentences)
+        # print(self.clean_sentences)
         return self.clean_sentences
 
 
@@ -81,5 +82,8 @@ class FileParser:
 
 if __name__ == "__main__":
     fp = FileParser(corpus = "austen-sense.txt")
-    fp.parse()
+    sentences = fp.parse()
+    mc = MarkovCain(sentences)
+    mc.create_bigram_trigram()
+    mc.get_synthetic_data()
 
