@@ -29,7 +29,7 @@ class MarkovCain:
         sentences = []
         for j in range(100000):
             l_ind = tlen - 1
-            temp = text[l_ind - 1] + " " + text[l_ind - 2]
+            temp = text[l_ind - 2] + " " + text[l_ind - 1]
             if temp in self.trigrams:
                 new_word = self.__generate_random_trigram(temp)
                 text.append(new_word)
