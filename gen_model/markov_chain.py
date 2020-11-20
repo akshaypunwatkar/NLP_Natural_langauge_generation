@@ -1,19 +1,28 @@
 from collections import defaultdict
 import random
+import operator
 class MarkovCain:
     def __init__(self, sentences):
         self.sentences = sentences
         self.bigrams = {}
         self.trigrams = {}
 
+    def predict(self):
+        self.run_predictor()
+        f = open("./synth_data_pred.txt", "w")
+        blob = self.parse_sentences(self.predicted_sentences)
+        f.write(blob)
+        f.close()
+
+
     def get_synthetic_data(self):
         # self.create_bigram_trigram()
-        sentences = self.generate_synthetic_data()
-        blob = self.parse_sentences(sentences)
+        self.sentences = self.generate_synthetic_data()
+        blob = self.parse_sentences(self.sentences)
         f = open("./synth_data.txt", "w")
         f.write(blob)
         f.close()
-        
+
     def parse_sentences(self, sentences):
         new_sentences = ""
         for sentence in sentences:
@@ -21,6 +30,30 @@ class MarkovCain:
             s1 += "."
             new_sentences += s1
         return new_sentences
+
+    def run_predictor(self):
+        ## We will use the same text generated to find predicted text
+        ## We have sentences, we will assume the first two words remain constant
+        self.predicted_sentences = []
+        for words in self.sentences:
+            pred_sent = [words[0], words[1]]
+            for ind in range(2, len(words)):
+                temp = pred_sent[ind - 2] + " " + pred_sent[ind - 1]
+                if temp in self.trigrams:
+                    pred_sent.append(self.find_max_trigram(temp))
+                elif(pred_sent[ind - 1] in self.bigrams):
+                    pred_sent.append(self.find_max_bigram(pred_sent[ind - 1]))
+                else:
+                    break
+            self.predicted_sentences.append(pred_sent)
+
+
+    def find_max_bigram(self):
+        return max(self.bigrams[token].items(), key = operator.itemgetter(1))[0]
+
+    def find_max_trigram(self, token):
+        return max(self.trigrams[token].items(), key = operator.itemgetter(1))[0]
+
 
 
     def generate_synthetic_data(self):

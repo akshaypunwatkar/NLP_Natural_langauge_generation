@@ -86,4 +86,5 @@ if __name__ == "__main__":
     mc = MarkovCain(sentences)
     mc.create_bigram_trigram()
     mc.get_synthetic_data()
+    mc.predict()
 
