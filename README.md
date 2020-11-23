@@ -13,4 +13,4 @@ To run these notebooks, the following libraries must be installed:
 * [bert-score](https://pypi.org/project/bert-score/)
 * [datasets](https://pypi.org/project/datasets/)
 
-Two of the datasets used for training models, Gutenberg corpus, brown corpus are available in the nltk library. Th ethird movie plot corpus is stored as a pickle [file](https://github.com/ishansgupta/nlp-project/blob/main/data/plots_text.pickle) in the repo.
+Two of the datasets used for training models, Gutenberg corpus, brown corpus are available in the nltk library. The third movie plot corpus is stored as a pickle [file](https://github.com/ishansgupta/nlp-project/blob/main/data/plots_text.pickle) in the repo.
